@@ -1,9 +1,6 @@
 // node.js Packages & Dependencies
-const { series } = require('gulp');
+const gulp = require('gulp');
 const sass = require('gulp-sass');
-const rename = require('gulp-rename');
-const concat = require('gulp-concat');
-const cleanCSS = require('gulp-clean-css');
 const imagemin = require('gulp-imagemin');
 const clean = require('gulp-clean');
 
@@ -28,15 +25,28 @@ var paths = {
 };
 
 // Compress (JPG, JPEG, PNG, GIF, SVG)
-function clean(cb) {
-	// body omitted
-	cb();
-}
-
-function build(cb) {
-	// body omitted
-	cb();
-}
-
-exports.build = build;
-exports.default = series(clean, build);
+gulp.task('img', () => {
+	return gulp
+		src('paths.src.imgs')
+		.pipe(
+			imagemin([
+				imagemin.gifsicle({
+					interlaced: true
+				}),
+				imagemin.mozjpeg({
+					quality: 75,
+					progressive: true
+				}),
+				imagemin.optipng({
+					optimizationLevel: 5
+				}),
+				imagemin.svgo({
+					plugins: [
+						{removeViewBox: true},
+						{cleanupIDs: false}
+					],
+				})
+			])
+		)
+		.pipe(gulp.dest('paths.dist.imgs'));
+});
