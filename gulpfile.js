@@ -1,4 +1,5 @@
 // node.js Packages & Dependencies
+const { series, parallel } = require('gulp');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const imagemin = require('gulp-imagemin');
@@ -25,6 +26,11 @@ var paths = {
 };
 
 // Compress (JPG, JPEG, PNG, GIF, SVG)
+function clear() {
+	return gulp
+	.src(paths.dist.root)
+		.pipe(clean());
+}
 
 function img() {
 	return gulp
@@ -33,11 +39,6 @@ function img() {
 		.pipe(gulp.dest(paths.dist.imgs));
 }
 
-function clear() {
-	return gulp
-	.src(paths.dist.root)
-		.pipe(clean());
-}
-
 exports.img = img;
 exports.clear = clear;
+exports.build = series(clear, parallel(img));
