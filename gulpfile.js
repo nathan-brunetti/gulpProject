@@ -25,28 +25,19 @@ var paths = {
 };
 
 // Compress (JPG, JPEG, PNG, GIF, SVG)
-gulp.task('img', () => {
+
+function img() {
 	return gulp
-		src('paths.src.imgs')
-		.pipe(
-			imagemin([
-				imagemin.gifsicle({
-					interlaced: true
-				}),
-				imagemin.mozjpeg({
-					quality: 75,
-					progressive: true
-				}),
-				imagemin.optipng({
-					optimizationLevel: 5
-				}),
-				imagemin.svgo({
-					plugins: [
-						{removeViewBox: true},
-						{cleanupIDs: false}
-					],
-				})
-			])
-		)
-		.pipe(gulp.dest('paths.dist.imgs'));
-});
+	.src(paths.src.imgs)
+		.pipe(imagemin())
+		.pipe(gulp.dest(paths.dist.imgs));
+}
+
+function clear() {
+	return gulp
+	.src(paths.dist.root)
+		.pipe(clean());
+}
+
+exports.img = img;
+exports.clear = clear;
